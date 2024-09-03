@@ -8,7 +8,9 @@ export const metadata = {
 }
 
 export default async function PokemonPage() {
-
+//* Comentarios
+//! method doon iuse
+//? methodos
 
     return (
         <div className='flex flex-col'>

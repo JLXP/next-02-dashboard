@@ -2,6 +2,9 @@ import { Pokemon, PokemonReponse } from '@/pokemons';
 import { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
+import { SiPokemon } from "react-icons/si";
+import { CgPokemon } from "react-icons/cg";
+import { Type } from '@/pokemons/interfaces/pokemon';
 
 interface Props {
     params: { name: string }
@@ -18,7 +21,7 @@ export async function generateStaticParams() {
 
     //throw new Error('Esto es un error que no deberia de suceder');
 
-    return static151Pokemons.map(({name}) => ({
+    return static151Pokemons.map(({ name }) => ({
         name: name
     }));
 }
@@ -43,7 +46,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 }
 
-
 const getPokemon = async (name: string): Promise<Pokemon> => {
 
     try {
@@ -60,18 +62,103 @@ const getPokemon = async (name: string): Promise<Pokemon> => {
 
 }
 
+const getTypeColorPokemon = async (types: Type[]): Promise<string> => {
+
+    let type = '';
+
+    if (types[1]?.type.name) {
+        type = types[1]?.type.name;
+    } else {
+        type = types[0]?.type.name;
+    }
+
+    switch (type) {
+        case 'normal':
+            return 'bg-amber-300';
+            break;
+        case 'fighting':
+            return 'bg-green-300';
+            break;
+        case 'flying':
+            return 'bg-sky-300';
+            break;
+        case 'poison':
+            return 'bg-purple-300';
+            break;
+        case 'ground':
+            return 'bg-green-300';
+            break;
+        case 'rock':
+            return 'bg-green-300';
+            break;
+        case 'bug':
+            return 'bg-blue-300';
+            break;
+        case 'ghost':
+            return 'bg-green-300';
+            break;
+        case 'steel':
+            return 'bg-blue-300';
+            break;
+        case 'fire':
+            return 'bg-red-300';
+            break;
+        case 'water':
+            return 'bg-blue-300';
+            break;
+        case 'grass':
+            return 'bg-green-300';
+            break;
+        case 'electric':
+            return 'bg-yellow-300';
+            break;
+        case 'psychic':
+            return 'bg-blue-300';
+            break;
+        case 'ice':
+            return 'bg-green-300';
+            break;
+        case 'dragon':
+            return 'bg-blue-300';
+            break;
+        case 'dark':
+            return 'bg-green-300';
+            break;
+        case 'fairy':
+            return 'bg-pink-300';
+            break;
+        case 'stellar':
+            return 'bg-green-300';
+            break;
+        case 'unknown':
+            return 'bg-green-300';
+            break;
+
+        default:
+            return 'bg-red-300';
+            break;
+    }
+
+
+}
+
 export default async function PokemonPage({ params }: Props) {
 
     const pokemon = await getPokemon(params.name);
-
+    const color = await getTypeColorPokemon(pokemon.types);
 
     return (
-        <div className="flex mt-5 flex-col items-center text-slate-800">
-            <div className="relative flex flex-col items-center rounded-[20px] w-[700px] mx-auto bg-white bg-clip-border  shadow-lg  p-3">
+        <div className="flex my-5 flex-col items-center text-slate-800">
+            <div className="relative flex flex-col items-center rounded-[20px] bg-slate-300 w-[700px] mx-auto  bg-clip-border shadow-lg p-3">
                 <div className="mt-2 mb-8 w-full">
-                    <h1 className="px-2 text-xl font-bold text-slate-700 capitalize">
-                        #{pokemon.id} {pokemon.name}
-                    </h1>
+                    <div className="flex justify-between items-center px-2">
+                        <h1 className="text-4xl font-bold text-slate-700 capitalize">
+                            #{pokemon.id} {pokemon.name}
+                        </h1>
+
+                        <SiPokemon size={100} className='text-red-600' />
+                    </div>
+
                     <div className="flex flex-col justify-center items-center">
                         <Image
                             src={pokemon.sprites.other?.dream_world.front_default ?? ''}
@@ -82,19 +169,33 @@ export default async function PokemonPage({ params }: Props) {
                         />
 
 
-                        <div className="flex flex-wrap">
-                            {
-                                pokemon.moves.map(move => (
-                                    <p key={move.move.name} className="mr-2 capitalize">{move.move.name}</p>
-                                ))
-                            }
+                        <div className="flex flex-col">
+                            <p className="flex items-center">
+                                <CgPokemon size={20} />
+                                <span className=" text-2xl font-bold text-slate-700 capitalize">
+                                    Moves
+                                </span>
+                            </p>
+
+                            <div className="flex flex-wrap">
+                                {
+                                    pokemon.moves.map(move => (
+                                        <p key={move.move.name} className="mr-2 capitalize"><span className='text-red-500'>*</span>{move.move.name}</p>
+                                    ))
+                                }
+                            </div>
+
                         </div>
                     </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4 px-2 w-full">
 
-                    <div className="flex flex-col items-start justify-center rounded-2xl bg-white bg-clip-border px-3 py-4  drop-shadow-lg ">
-                        <p className="text-sm text-gray-600">Types</p>
+                    <div className={`flex flex-col items-start justify-center ${color ? color : 'bg-white'} rounded-2xl bg-clip-border px-3 py-4  drop-shadow-lg`}>
+                        <p className="flex text-sm text-gray-600">
+                            <span className="text-red-600">
+                                <CgPokemon size={20} />
+                            </span>
+                            Types</p>
                         <div className="text-base font-medium text-navy-700 flex">
                             {
                                 pokemon.types.map(type => (
@@ -104,8 +205,13 @@ export default async function PokemonPage({ params }: Props) {
                         </div>
                     </div>
 
-                    <div className="flex flex-col items-start justify-center rounded-2xl bg-white bg-clip-border px-3 py-4  drop-shadow-lg ">
-                        <p className="text-sm text-gray-600">Peso</p>
+                    <div className={`flex flex-col items-start justify-center ${color ? color : 'bg-white'} rounded-2xl bg-clip-border px-3 py-4  drop-shadow-lg`}>
+                        <p className="flex text-sm text-gray-600">
+                            <span className="text-red-600">
+                                <CgPokemon size={20} />
+                            </span>
+                            Peso
+                        </p>
                         <span className="text-base font-medium text-navy-700 flex">
                             {
                                 pokemon.weight
@@ -113,8 +219,13 @@ export default async function PokemonPage({ params }: Props) {
                         </span>
                     </div>
 
-                    <div className="flex flex-col justify-center rounded-2xl bg-white bg-clip-border px-3 py-4  drop-shadow-lg">
-                        <p className="text-sm text-gray-600">Regular Sprites</p>
+                    <div className={`flex flex-col items-start justify-center ${color ? color : 'bg-white'} rounded-2xl bg-clip-border px-3 py-4  drop-shadow-lg`}>
+                        <p className="flex text-sm text-gray-600">
+                            <span className="text-red-600">
+                                <CgPokemon size={20} />
+                            </span>
+                            Regular Sprites
+                        </p>
                         <div className="flex justify-center">
 
                             <Image
@@ -134,8 +245,13 @@ export default async function PokemonPage({ params }: Props) {
                         </div>
                     </div>
 
-                    <div className="flex flex-col justify-center rounded-2xl bg-white bg-clip-border px-3 py-4  drop-shadow-lg">
-                        <p className="text-sm text-gray-600">Shiny Sprites</p>
+                    <div className={`flex flex-col items-start justify-center ${color ? color : 'bg-white'} rounded-2xl bg-clip-border px-3 py-4  drop-shadow-lg`}>
+                        <p className="flex text-sm text-gray-600">
+                            <span className="text-red-600">
+                                <CgPokemon size={20} />
+                            </span>
+                            Shiny Sprites
+                        </p>
                         <div className="flex justify-center">
 
                             <Image

@@ -7,6 +7,7 @@ interface Props {
     params: { id: string }
 }
 
+//* El generateStaticParams, genera las paginas estaticas
 //! En build time
 export async function generateStaticParams() {
     const static151Pokemons = Array.from({ length: 151 }).map((v, i) => `${i + 1}`);
