@@ -1,4 +1,3 @@
-import { SideBar } from '@/components';
 import Link from 'next/link';
 
 
@@ -18,7 +17,7 @@ export default function NotFound() {
                     ></span>
 
                     <span className="relative block px-8 py-3 bg-[#1A2238] border border-current">
-                        <Link href="/dashboard/pokemons ">Ver listado de pokemons</Link>
+                        <Link href="/dashboard/pokemons">Ver listado de pokemons</Link>
                     </span>
                 </div>
             </button>
